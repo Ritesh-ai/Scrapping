@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div id="content" style="margin: 0px; padding: 0px; right: 0px; top: 0px; width: 100%; height: 100%; z-index: 30001; opacity: 0.8;"></div>
+    </body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var loader = '<div style="position: absolute; color: White; top: 50%; left: 45%;" class="text-center"><span style="width: 3rem; height: 3rem;" class="spinner-grow spinner-grow-sm text-primary" role="status" aria-hidden="true"></span></div>';
+        $('#content').html(loader);
+        setTimeout(function(){ 
+            $.ajax({
+                url: 'http://54.196.73.156:88/show',
+                type: 'get',
+                headers: {  'Access-Control-Allow-Origin': '*' },
+                crossDomain: true,
+                success: function(data){
+                    var htmldata = '<div class="container"><h2>Company Name and news</h2><div class="list-group">';
+                    for (var i = 0; i < data.data.company_title.length; i++) {
+                        var room = data[i];
+                        htmldata+='<div class="list-group-item"><h5>'+data.data.company_title[i]+'</h5><h6>'+data.data.news[i]+'</h6></div>';
+                    }
+                    htmldata+='</div></div>';
+                    $('#content').html(htmldata);
+                    console.log(data)
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                    $('#content').html(errorMsg);
+                }
+            });
+         }, 1000);
+    });
+</script>
